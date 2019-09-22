@@ -364,7 +364,8 @@ in windows)."
      (online-judge--oj-sequential-command
       (online-judge--command-download-test)
       (online-judge--command-run-test))
-     online-judge--buffer-name online-judge--buffer-name)))
+     online-judge--buffer-name online-judge--buffer-name)
+    (pop-to-buffer online-judge--buffer-name)))
 
 (defun online-judge-submit ()
   ""
@@ -376,6 +377,31 @@ in windows)."
      #'online-judge--run-oj
      (online-judge--command-submit))
      (if (y-or-n-p "Really submit?") "y" "n"))))
+
+;; (defun online-judge-test&submit ()
+;;   ""
+;;   (interactive)
+;;   (if (not online-judge-mode) (error "online-judge-mode is off")
+;;     ;; (unless online-judge--test-downloaded (online-judge-download-test))
+
+;;     ;; TODO: test && submit
+;;     (async-shell-command
+;;      (concat
+;;       (apply
+;;       #'online-judge--make-oj-command
+;;       (online-judge--command-run-test))
+;;       " | "
+;;       (if (eq system-type 'windows-nt) "findstr" "grep")
+;;       " "
+;;       "\"test failed\""
+;;       (if (eq system-type 'windows-nt) " || " " && ")
+;;      (apply
+;;       #'online-judge--make-oj-command
+;;       (online-judge--command-submit)))
+
+;;      online-judge--buffer-name online-judge--buffer-name)
+;;     ;; TODO: Look edited or not.
+;;     ))
 
 (defun online-judge-toggle-error-range ()
   ""
