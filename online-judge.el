@@ -141,6 +141,20 @@ in windows)."
   :group 'online-judge
   :type '(repeat string))
 
+(defcustom online-judge-mode-line-list '(:eval (online-judge--mode-line))
+  ""
+  :group 'online-judge
+  :type 'list
+  :risky t
+  :set (lambda (variable value)
+         (if (not (bound-and-true-p online-judge-mode))
+             (set variable value)
+           (delete value mode-line-format)
+           (setq-default mode-line-format
+                         (append
+                          mode-line-format
+                          (list (set variable value)))))))
+
 
 
 (defun online-judge--sample-format ()
@@ -344,8 +358,8 @@ in windows)."
   :group 'online-judge
   (when online-judge-mode (online-judge--set-all))
   (if online-judge-mode
-      (add-to-list 'mode-line-format '(:eval (online-judge--mode-line)) t)
-    (delete '(:eval (online-judge--mode-line)) mode-line-format)))
+      (add-to-list 'mode-line-format online-judge-mode-line-list t)
+    (delete online-judge-mode-line-list mode-line-format)))
 
 (defun online-judge-download-test ()  ;TODO: downloaded is t even when not.
   ""
