@@ -412,13 +412,19 @@ in windows)."
   (interactive)
   (if (not online-judge-mode) (error "online-judge-mode is off")
     (save-buffer)
-    (process-send-string
-     (apply
-      #'online-judge--run-oj
-      (online-judge--command-submit))
-     (if (or (not online-judge-confirm-submit)
-             (y-or-n-p "Really submit?"))
-         "y" "n"))))
+    (let ((process (apply
+                    #'online-judge--run-oj
+                    (online-judge--command-submit))))
+      (process-send-string
+       process
+       (if (or (not online-judge-confirm-submit)
+               (y-or-n-p "Really submit?"))
+           "y" "n"))
+      (set-process-sentinel
+       process (lambda (_process string)
+                 (message "Submission %s."
+                  (if (string= "finished\n" string)
+                      "succeeded" "failed")))))))
 
 (defun online-judge-test&submit ()
   ""
