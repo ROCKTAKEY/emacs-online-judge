@@ -216,7 +216,7 @@ in windows)."
             (replace-match "%s" nil nil (online-judge--sample-format))
           "%s.%e")
         "--command" (online-judge--command-name)
-        "--print-input" "-e" (princ online-judge--error-range)))
+        "--print-input" "-e" (prin1-to-string online-judge--error-range)))
 
 
 
