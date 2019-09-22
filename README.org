@@ -1,0 +1,39 @@
+[[https://github.com/ROCKTAKEY/emacs-online-judge][https://img.shields.io/github/tag/ROCKTAKEY/emacs-online-judge.svg?style=flat-square]]
+[[file:LICENSE][https://img.shields.io/github/license/ROCKTAKEY/emacs-online-judge.svg?style=flat-square]]
+[[https://travis-ci.com/ROCKTAKEY/emacs-online-judge/][https://img.shields.io/travis/com/ROCKTAKEY/emacs-online-judge/master.svg?style=flat-square]]
+* client of online-judge-tools for Emacs.
+* How to Use?
+  You have to install online-judge-tools(~oj~) [[https://github.com/kmyk/online-judge-tools][here]].
+  In addition, this package depends on [[https://github.com/rejeep/f.el][f.el]] and [[https://github.com/magnars/dash.el][dash.el]]
+  Then, you have to add ~oj~ to your path, or set path to ~oj~ to ~online-judge-executable~.
+
+  Then, in buffer where ~online-judge-mode~ is on, you can use some command below:
+  - ~online-judge-login~
+  - ~online-judge-download-test~
+  - ~online-judge-run-test~
+  - ~online-judge-submit~
+  - ~online-judge-test&submit~
+  - ~online-judge-toggle-error-range~
+  - ~online-judge-update-error-range~
+
+  Let's try on AtCoder, for example.
+  1. Run ~online-judge-login~ to login host for submit.
+     Select atcoder, and put username and password.
+  2. Make directory ~/somewhere/atcoder/abc140/~ and make file ~a.cpp~
+  3. Open ~a.cpp~ with ~find-file~.
+  4. Run ~online-judge-mode~. The string ~atcoder/abc140/a~ is displayed on mode-line.
+     Host, contest and problem id is automatically recognized from directory.
+  5. Solve and compile it (~g++ a.cpp~).
+  6. Run ~online-judge-run-test~. Result of test is displayed.
+  7. Run ~online-judge-submit~ to submit the file. Confirmation is needed by default.
+
+** The Other Useful things
+  - ~online-judge-test&submit~ can automatically submit the file when tests are all collect.
+  - ~online-judge-mode~ become automatically on when list of strings ~online-judge-directories~ has ancestor of the file.
+
+* Functions
+
+* Variables
+
+* License
+  This package is licensed by GPLv3. See [[file:LICENSE][LICENSE]].
