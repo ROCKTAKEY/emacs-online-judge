@@ -440,8 +440,8 @@ in windows)."
 
 (defun online-judge--mode-on-if-matched ()
   ""
-  (when (--any (f-ancestor-of? it (buffer-file-name)) online-judge-directories))
-  (online-judge-mode +1))
+  (when (--any (f-ancestor-of? it (buffer-file-name)) online-judge-directories)
+    (online-judge-mode +1)))
 
 (add-hook 'find-file-hook 'online-judge--mode-on-if-matched)
 
