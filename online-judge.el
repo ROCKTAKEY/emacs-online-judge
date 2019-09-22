@@ -104,8 +104,6 @@ in windows)."
   :group 'online-judge
   :type [string nil])
 
-(make-local-variable 'online-judge-command-name)
-
 (defcustom online-judge-default-host 'atcoder
   ""
   :group 'online-judge
