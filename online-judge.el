@@ -43,7 +43,7 @@
 
 (defvar-local online-judge--url nil)
 
-(defvar-local online-judge--test-downloaded nil)
+(defvar-local online-judge--test-downloading nil)
 
 (defvar-local online-judge--set nil)
 
@@ -140,6 +140,10 @@ in windows)."
   ""
   :group 'online-judge
   :type '(repeat string))
+
+(defcustom online-judge-confirm-submit t ""
+  :group 'online-judge
+  :type 'bool)
 
 (defcustom online-judge-mode-line-list '(:eval (online-judge--mode-line))
   ""
@@ -361,26 +365,49 @@ in windows)."
       (add-to-list 'mode-line-format online-judge-mode-line-list t)
     (delete online-judge-mode-line-list mode-line-format)))
 
-(defun online-judge-download-test ()  ;TODO: downloaded is t even when not.
+(defun online-judge-download-test (&optional next)
   ""
   (interactive)
-  (apply
-   #'online-judge--run-oj
-   (online-judge--command-download-test))
-  ;; (setq online-judge--test-downloaded t)
-  )
+  (if online-judge--test-downloading
+      (set-process-sentinel
+       online-judge--test-downloading
+       `(lambda (process string)
+          (funcall
+           ,(or (process-sentinel online-judge--test-downloading) #'ignore)
+           process string)
+          ,next))
+    (set-process-sentinel
+     (setq online-judge--test-downloading
+           (apply
+            #'online-judge--run-oj
+            (online-judge--command-download-test)))
+     (if next
+         `(lambda (process string)
+            (with-current-buffer ,(current-buffer)
+              (if (string= string "finished\n")
+                  ,next
+                (message "Download failed."))
+              (setq online-judge--test-downloading nil)))
+       (lambda (process string)
+         (with-current-buffer ,(current-buffer)
+           (message "Download %s."
+                    (if (string= string "finished\n") "succeeded" "failed"))
+           (setq online-judge--test-downloading nil)))))))
 
-(defun online-judge-run-test ()
+(defun online-judge-run-test (&optional next)
   "Run test."
   (interactive)
   (if (not online-judge-mode) (error "online-judge-mode is off")
-    (unless online-judge--test-downloaded (online-judge-download-test))
-    (async-shell-command
-     (online-judge--oj-sequential-command
-      (online-judge--command-download-test)
-      (online-judge--command-run-test))
-     online-judge--buffer-name online-judge--buffer-name)
-    (pop-to-buffer online-judge--buffer-name)))
+    (online-judge-download-test
+     `(set-process-sentinel
+       (apply #'online-judge--run-oj (online-judge--command-run-test))
+       (lambda (process string)
+         (if (string= "finished\n" string)
+             ,(if next
+                  `(with-current-buffer ,(current-buffer) ,next)
+                '(display-buffer online-judge--buffer-name))
+           (message "Test Failed. ")
+           (display-buffer online-judge--buffer-name)))))))
 
 (defun online-judge-submit ()
   ""
@@ -389,34 +416,16 @@ in windows)."
     (save-buffer)
     (process-send-string
      (apply
-     #'online-judge--run-oj
-     (online-judge--command-submit))
-     (if (y-or-n-p "Really submit?") "y" "n"))))
+      #'online-judge--run-oj
+      (online-judge--command-submit))
+     (if (or (not online-judge-confirm-submit)
+             (y-or-n-p "Really submit?"))
+         "y" "n"))))
 
-;; (defun online-judge-test&submit ()
-;;   ""
-;;   (interactive)
-;;   (if (not online-judge-mode) (error "online-judge-mode is off")
-;;     ;; (unless online-judge--test-downloaded (online-judge-download-test))
-
-;;     ;; TODO: test && submit
-;;     (async-shell-command
-;;      (concat
-;;       (apply
-;;       #'online-judge--make-oj-command
-;;       (online-judge--command-run-test))
-;;       " | "
-;;       (if (eq system-type 'windows-nt) "findstr" "grep")
-;;       " "
-;;       "\"test failed\""
-;;       (if (eq system-type 'windows-nt) " || " " && ")
-;;      (apply
-;;       #'online-judge--make-oj-command
-;;       (online-judge--command-submit)))
-
-;;      online-judge--buffer-name online-judge--buffer-name)
-;;     ;; TODO: Look edited or not.
-;;     ))
+(defun online-judge-test&submit ()
+  ""
+  (interactive)
+  (online-judge-run-test '(online-judge-submit)))
 
 (defun online-judge-toggle-error-range ()
   ""
