@@ -182,6 +182,13 @@ in windows)."
      "online-judge" ,online-judge--buffer-name ,online-judge-executable
      ,@args)))
 
+(defun online-judge--run-oj-sync (&rest args)
+  ""
+  (eval
+   `(call-process
+     ,online-judge-executable nil ,online-judge--buffer-name nil
+     ,@args)))
+
 (defun online-judge--make-oj-command (&rest args)
   ""
   (mapconcat #'shell-quote-argument
