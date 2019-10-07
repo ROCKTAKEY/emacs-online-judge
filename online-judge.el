@@ -209,7 +209,7 @@ in windows)."
 
 (defun online-judge--command-submit ()
   ""
-  (list "submit" (online-judge--get-url) (buffer-file-name)))
+  (list "submit" (online-judge--get-url) (buffer-file-name) "--yes"))
 
 (defun online-judge--command-download-test ()
   ""
@@ -426,7 +426,7 @@ in windows)."
        process
        (if (or (not online-judge-confirm-submit)
                (y-or-n-p "Really submit?"))
-           "y" "n"))
+           "y\n" "n\n"))
       (set-process-sentinel
        process (lambda (_process string)
                  (message "Submission %s."
