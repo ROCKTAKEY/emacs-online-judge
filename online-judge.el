@@ -57,8 +57,6 @@
 
 (defvar online-judge--buffer-name "*online-judge*")
 
-(defvar online-judge--error-range-default 1e-6)
-
 (defvar online-judge--host-alist
   '((atcoder .
              (:host "[Aa]t[Cc]oder"
@@ -138,6 +136,11 @@ in windows)."
   ""
   :group 'online-judge
   :type '(repeat string))
+
+(defcustom online-judge-error-range-default 1e-6
+  ""
+  :group 'online-judge
+  :type 'number)
 
 (defcustom online-judge-confirm-submit t ""
   :group 'online-judge
@@ -443,7 +446,7 @@ in windows)."
   (interactive)
   (if (= 0 online-judge--error-range)
       (setq online-judge--error-range (or online-judge--error-range-before
-                        online-judge--error-range-default))
+                        online-judge-error-range-default))
     (setq online-judge--error-range-before online-judge--error-range)
     (setq online-judge--error-range 0)))
 
