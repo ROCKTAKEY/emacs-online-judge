@@ -32,8 +32,31 @@
   - ~online-judge-mode~ become automatically on when list of strings ~online-judge-directories~ has ancestor of the file.
 
 * Functions
-
+** ~online-judge-login~
+   Login selected host. Use ID and password is needed.
+   You have to login before submission or real-time participation of contest.
+**  ~online-judge-download-test~
+   Download testcases. Other function which need testcases run it automatically,
+   so you don't have to run this function on yourself.
+** ~online-judge-run-test~
+   Test program with tesecases. You can set command to run
+   ~online-judge-command-name~. See [[~online-judge-command-name~]].
+** ~online-judge-submit~
+   Submit source code.
+** ~online-judge-test&submit~
+   Submit source code if test is passed.
+** ~online-judge-toggle-error-range~
+   Toggle error range ~online-judge--error-range~, between 0 and
+   ~online-judge--error-range-default~, which default is 1e-6.
+   See [[~online-judge--error-range-default~]].
+** ~online-judge-update-error-range~
+   Update ~online-judge--error-range~. This value is not saved when kill emacs,
+   so you should setq to ~online-judge--error-range-default~ if you want save.
 * Variables
-
+** ~online-judge-command-name~
+   run command name for test.
+** ~online-judge--error-range-default~
+   Permitted default error when toggle error range with
+   ~online-judge-toggle-error-range~.
 * License
   This package is licensed by GPLv3. See [[file:LICENSE][LICENSE]].
