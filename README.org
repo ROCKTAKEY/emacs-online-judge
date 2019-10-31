@@ -40,7 +40,8 @@
    so you don't have to run this function on yourself.
 ** ~online-judge-run-test~
    Test program with tesecases. You can set command to run
-   ~online-judge-command-name~. See [[~online-judge-command-name~]].
+   ~online-judge-command-name~.
+   See [[#command-name][online-judge-command-name]].
 ** ~online-judge-submit~
    Submit source code.
 ** ~online-judge-test&submit~
@@ -48,14 +49,20 @@
 ** ~online-judge-toggle-error-range~
    Toggle error range ~online-judge--error-range~, between 0 and
    ~online-judge--error-range-default~, which default is 1e-6.
-   See [[~online-judge--error-range-default~]].
+   See [[#error-range-default][online-judge--error-range-default]].
 ** ~online-judge-update-error-range~
    Update ~online-judge--error-range~. This value is not saved when kill emacs,
    so you should setq to ~online-judge--error-range-default~ if you want save.
 * Variables
 ** ~online-judge-command-name~
+   :PROPERTIES:
+   :CUSTOM_ID: command-name
+   :END:
    run command name for test.
 ** ~online-judge--error-range-default~
+   :PROPERTIES:
+   :CUSTOM_ID: error-range-default
+   :END:
    Permitted default error when toggle error range with
    ~online-judge-toggle-error-range~.
 * License
