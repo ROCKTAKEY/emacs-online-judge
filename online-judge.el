@@ -96,7 +96,8 @@ in atcoder, for example)."
 
 (defcustom online-judge-command-name
   (if (eq system-type 'windows-nt) "a.exe" "a.out")
-  "If non-nil, this should be executable name for tested.
+  "If non-nil, this should be executable name for tested,
+or sexp which return such a executable name.
 When nil, it is regarded as (`buffer-file-name') (or (`buffer-file-name').exe
 in windows)."
   :group 'online-judge
@@ -173,7 +174,7 @@ in windows)."
 
 (defun online-judge--command-name ()
   ""
-  (or online-judge-command-name
+  (or (eval online-judge-command-name)
       (format
        (if (eq system-type 'windows-nt) "%s.exe" "%s")
        (file-name-base (buffer-file-name)))))

@@ -58,7 +58,7 @@
    :PROPERTIES:
    :CUSTOM_ID: command-name
    :END:
-   run command name for test.
+   Run command name for test, or sexp which return such a name.
 ** ~online-judge-error-range-default~
    :PROPERTIES:
    :CUSTOM_ID: error-range-default
