@@ -426,11 +426,6 @@ in windows)."
     (let ((process (apply
                     #'online-judge--run-oj
                     (online-judge--command-submit))))
-      (process-send-string
-       process
-       (if (or (not online-judge-confirm-submit)
-               (y-or-n-p "Really submit?"))
-           "y\n" "n\n"))
       (set-process-sentinel
        process (lambda (_process string)
                  (message "Submission %s."
