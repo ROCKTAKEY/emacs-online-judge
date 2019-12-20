@@ -1,6 +1,6 @@
 [[https://github.com/ROCKTAKEY/emacs-online-judge][https://img.shields.io/github/tag/ROCKTAKEY/emacs-online-judge.svg?style=flat-square]]
 [[file:LICENSE][https://img.shields.io/github/license/ROCKTAKEY/emacs-online-judge.svg?style=flat-square]]
-[[https://travis-ci.com/ROCKTAKEY/emacs-online-judge/][https://img.shields.io/travis/com/ROCKTAKEY/emacs-online-judge/master.svg?style=flat-square]]
+[[https://github.com/ROCKTAKEY/emacs-online-judge/actions][https://img.shields.io/github/workflow/status/ROCKTAKEY/emacs-online-judge/CI/master.svg?style=flat-square]]
 * client of online-judge-tools for Emacs.
 * How to Use?
   You have to install online-judge-tools(~oj~) [[https://github.com/kmyk/online-judge-tools][here]].
