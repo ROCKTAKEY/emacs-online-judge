@@ -14,7 +14,7 @@ jobs:
           - '26.1'
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-python@1.1.1
+      - uses: actions/setup-python@v1.1.1
       - uses: purcell/setup-emacs@master
         with:
           version: ${{ matrix.emacs_version }}
