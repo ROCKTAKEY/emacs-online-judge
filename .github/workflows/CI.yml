@@ -20,4 +20,5 @@ jobs:
           version: ${{ matrix.emacs_version }}
       - uses: conao3/setup-cask@master
 
+      - run: cask install
       - run: make test-all
