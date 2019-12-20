@@ -18,5 +18,6 @@ jobs:
       - uses: purcell/setup-emacs@master
         with:
           version: ${{ matrix.emacs_version }}
+      - uses: conao3/setup-cask@master
 
-    run: make test-all
+      - run: make test-all
