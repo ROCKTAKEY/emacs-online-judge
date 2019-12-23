@@ -110,29 +110,38 @@ in windows)."
   :type [string nil])
 
 (defcustom online-judge-default-host 'atcoder
-  ""
+  "Default host. online-judge-mode uses this host if only put enter on choice.
+Choice from car of each element of `online-judge--host-alist'."
   :group 'online-judge
   :type `(choice ,@(cl-mapcar
                     (lambda (arg)
                       `(const ,(car arg)))
                     online-judge--host-alist)))
 
-(defcustom online-judge-ask-when-unconfirmed t ""
+(defcustom online-judge-ask-when-unconfirmed t
+  "If t, You are asked what host you use, when cannot confirm host from dir."
   :group 'online-judge
   :type 'bool)
 
 (defcustom online-judge-separator-1 "/"
-  "Only use when online-judge-display-mode-line is t"
+  "Separator between host and contest on mode-line.
+Only use when online-judge-display-mode-line is t."
   :group 'online-judge
   :type 'string)
 
 (defcustom online-judge-separator-2 "/"
-  "Only use when online-judge-display-mode-line is t or contest"
+  "Separator between contest and problem on mode-line.
+Only use when online-judge-display-mode-line is t or symbol contest."
   :group 'online-judge
   :type 'string)
 
 (defcustom online-judge-display-mode-line t
-  ""
+  "This determine how long infomation is displayed on mode-line.
+You can set this variable to:
+	t: Display host, contest, and problem.
+	contest: Display contest and problem.
+	problem: Display problem.
+	nil: Display none."
   :group 'online-judge
   :type '(choose (const t)
                  (const contest)
@@ -140,12 +149,14 @@ in windows)."
                  (const nil)))
 
 (defcustom online-judge-directories '()
-  ""
+  "`online-judge-mode' become automatically on if the file is children of element of this."
   :group 'online-judge
   :type '(repeat string))
 
 (defcustom online-judge-error-range-default 1e-6
-  ""
+  "Default error range on test.
+You can toggle or change error range interactively with
+`online-judge-toggle-error-range' and `online-judge-update-error-range'."
   :group 'online-judge
   :type 'number)
 
@@ -154,7 +165,7 @@ in windows)."
   :type 'bool)
 
 (defcustom online-judge-mode-line-list '(:eval (online-judge--mode-line))
-  ""
+  "Mode line list which is added to `mode-line-format'."
   :group 'online-judge
   :type 'list
   :risky t
