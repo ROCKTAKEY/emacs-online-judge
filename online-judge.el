@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.0.1
+;; Version: 1.1.0
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -73,6 +73,12 @@
 
 (defvar online-judge--login-alist
   (mapcar (lambda (arg) (list (car arg))) online-judge--host-alist))
+
+(defvar online-judge-test-mode-map (make-sparse-keymap)
+  "Keymap of `online-judge-test-mode.'")
+
+(defvar online-judge-oj-test-mode-key-alist
+  '(("TAB" . outline-toggle-children)))
 
 (defconst online-judge--base-sample-format "sample-%i.%e")
 
@@ -163,6 +169,31 @@ in windows)."
 
 
 
+(defun online-judge--test-outline-mode ()
+  ""
+  (setq outline-regexp "# [-0-9: ]*")
+  (outline-minor-mode))
+
+(defun online-judge--set-keys ()
+  ""
+  (mapcar (lambda (arg)
+            (define-key online-judge-test-mode-map (kbd (car arg)) (cdr arg)))
+          online-judge-oj-test-mode-key-alist)
+  (use-local-map online-judge-test-mode-map))
+
+(define-generic-mode online-judge-test-mode
+  '("[*]"
+    "[!]"
+    "[x]")
+  nil
+  '(("\\[-\\] .*$" . font-lock-warning-face)
+    ("\\[\\+\\] .*$" . font-lock-constant-face))
+  nil
+  '(online-judge--test-outline-mode online-judge--set-keys)
+  nil)
+
+
+
 (defun online-judge--sample-format ()
   ""
   (or online-judge--sample-format
@@ -179,8 +210,16 @@ in windows)."
        (if (eq system-type 'windows-nt) "%s.exe" "%s")
        (file-name-base (buffer-file-name)))))
 
+(defun online-judge--add-buffer-separator-and-hide (str)
+  ""
+  (with-current-buffer (get-buffer-create online-judge--buffer-name)
+    (goto-char (point-max))
+    (insert "\n# " (format-time-string "%F %R:%S") " " str "\n")
+    (outline-hide-body)))
+
 (defun online-judge--run-oj (&rest args)
   ""
+  (online-judge--add-buffer-separator-and-hide (car args))
   (eval
    `(start-process
      "online-judge" ,online-judge--buffer-name ,online-judge-executable
@@ -188,6 +227,7 @@ in windows)."
 
 (defun online-judge--run-oj-sync (&rest args)
   ""
+  (online-judge--add-buffer-separator-and-hide (car args))
   (eval
    `(call-process
      ,online-judge-executable nil ,online-judge--buffer-name nil
