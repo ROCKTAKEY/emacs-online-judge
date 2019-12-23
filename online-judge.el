@@ -484,12 +484,14 @@ in windows)."
       (setq online-judge--error-range (or online-judge--error-range-before
                         online-judge-error-range-default))
     (setq online-judge--error-range-before online-judge--error-range)
-    (setq online-judge--error-range 0)))
+    (setq online-judge--error-range 0))
+  (message "Error range is set to %f." online-judge--error-range))
 
 (defun online-judge-update-error-range (error)
   ""
   (interactive "nError range: ")
-  (setq online-judge--error-range error))
+  (setq online-judge--error-range error)
+  (message "Error range is set to %f." online-judge--error-range))
 
 (defun online-judge-login ()
   ""
