@@ -160,10 +160,6 @@ You can toggle or change error range interactively with
   :group 'online-judge
   :type 'number)
 
-(defcustom online-judge-confirm-submit t ""
-  :group 'online-judge
-  :type 'bool)
-
 (defcustom online-judge-mode-line-list '(:eval (online-judge--mode-line))
   "Mode line list which is added to `mode-line-format'."
   :group 'online-judge
