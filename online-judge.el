@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.1
+;; Version: 1.1.2
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -226,6 +226,7 @@ You can toggle or change error range interactively with
 (defun online-judge--add-buffer-separator-and-hide (str)
   ""
   (with-current-buffer (get-buffer-create online-judge--buffer-name)
+    (online-judge-test-mode)
     (goto-char (point-max))
     (insert "\n# " (format-time-string "%F %R:%S") " " str "\n")
     (outline-hide-body)))
