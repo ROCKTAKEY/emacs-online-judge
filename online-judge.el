@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.3
+;; Version: 1.1.4
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -43,11 +43,15 @@
 
 (defvar-local online-judge--url nil)
 
-(defvar-local online-judge--test-downloading nil)
+(defvar-local online-judge--test-downloading nil
+  "If on downloading test, it have process object.
+If not, it have nil.")
 
-(defvar-local online-judge--test-downloaded nil)
+(defvar-local online-judge--test-downloaded nil
+  "Testcases are downloaded or not in the buffer.")
 
-(defvar-local online-judge--set nil)
+(defvar-local online-judge--set nil
+  "All information of the problem is set or not.")
 
 (defvar-local online-judge--error-range 0)
 
