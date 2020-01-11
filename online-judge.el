@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.0
+;; Version: 1.1.1
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -67,9 +67,15 @@
               :problem "[A-Za-z]"
               :url (format
                     "https://atcoder.jp/contests/%s/tasks/%s_%s"
-                    (online-judge--get-contest)
-                    (online-judge--get-contest)
-                    (downcase (online-judge--get-problem)))))))
+                    (downcase (online-judge--get-contest))
+                    (downcase (online-judge--get-contest))
+                    (cond
+                     ((string-match "[Aa][Rr][Cc].*" (online-judge--get-contest))
+                      (format
+                       "%s"
+                       (1+ (- (elt (downcase (online-judge--get-problem)) 0)
+                              ?a))))
+                     (t (downcase (online-judge--get-problem)))))))
 
 (defvar online-judge--login-alist
   (mapcar (lambda (arg) (list (car arg))) online-judge--host-alist))
