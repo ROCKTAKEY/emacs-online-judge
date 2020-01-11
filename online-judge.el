@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.2
+;; Version: 1.1.3
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -44,6 +44,8 @@
 (defvar-local online-judge--url nil)
 
 (defvar-local online-judge--test-downloading nil)
+
+(defvar-local online-judge--test-downloaded nil)
 
 (defvar-local online-judge--set nil)
 
@@ -447,14 +449,22 @@ You can toggle or change error range interactively with
      (if next
          `(lambda (process string)
             (with-current-buffer ,(current-buffer)
-              (if (string= string "finished\n")
-                  ,next
+              (if (or (string= string "finished\n")
+                      online-judge--test-downloaded)
+                  (progn
+                    (setq online-judge--test-downloaded t)
+                    ,next)
                 (message "Download failed."))
               (setq online-judge--test-downloading nil)))
        (lambda (process string)
          (with-current-buffer ,(current-buffer)
+           (when (string= string "finished\n")
+             (setq online-judge--test-downloaded t))
            (message "Download %s."
-                    (if (string= string "finished\n") "succeeded" "failed"))
+                    (cond
+                     ((string= string "finished\n") "succeeded")
+                      (online-judge--test-downloaded "have already finished")
+                      (t "failed")))
            (setq online-judge--test-downloading nil)))))))
 
 (defun online-judge-run-test (&optional next)
