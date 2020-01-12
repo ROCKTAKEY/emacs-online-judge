@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.5
+;; Version: 1.1.6
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -58,6 +58,8 @@ If not, it have nil.")
 (defvar-local online-judge--error-range-before nil)
 
 (defvar-local online-judge--sample-format nil)
+
+(defvar-local online-judge--this-url nil)
 
 
 
@@ -385,9 +387,10 @@ You can toggle or change error range interactively with
 
 (defun online-judge--get-url ()
   ""
-  (eval
-   (plist-get
-    (cdr (assq (online-judge--get-host) online-judge--host-alist)) :url)))
+  (or online-judge--this-url
+      (eval
+       (plist-get
+        (cdr (assq (online-judge--get-host) online-judge--host-alist)) :url))))
 
 (defun online-judge--get-host ()
   ""
@@ -539,6 +542,11 @@ You can toggle or change error range interactively with
                      "-u" username "-p" password))))
     (setcdr (assq (car host-cons) online-judge--login-alist) t))
   (message "Login succeeded."))
+
+(defun online-judge-set-url (url)
+  ""
+  (interactive "sURL: ")
+  (setq online-judge--this-url url))
 
 
 
