@@ -31,7 +31,8 @@
   5. Solve and compile it (~g++ a.cpp~).
   6. Run ~online-judge-run-test~. Result of test is displayed.
   7. Run ~online-judge-submit~ to submit the file. Confirmation is needed by default.
-
+  8. If URL detection or other oj job failed, you can directly #+setupfile: URL
+     by ~online-judge-set-url~.
 ** The Other Useful things
   - ~online-judge-test&submit~ can automatically submit the file when tests are all collect.
   - ~online-judge-mode~ become automatically on when list of strings ~online-judge-directories~ has ancestor of the file.
@@ -40,6 +41,8 @@
 ** ~online-judge-login~
    Login selected host. Use ID and password is needed.
    You have to login before submission or real-time participation of contest.
+** ~online-judge-set-url~
+   You can directly set URL by this function.
 **  ~online-judge-download-test~
    Download testcases. Other function which need testcases run it automatically,
    so you don't have to run this function on yourself.
