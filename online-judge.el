@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.4
+;; Version: 1.1.5
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -82,6 +82,7 @@ If not, it have nil.")
                        (1+ (- (elt (downcase (online-judge--get-problem)) 0)
                               ?a))))
                      (t (downcase (online-judge--get-problem)))))))
+    ))
 
 (defvar online-judge--login-alist
   (mapcar (lambda (arg) (list (car arg))) online-judge--host-alist))
