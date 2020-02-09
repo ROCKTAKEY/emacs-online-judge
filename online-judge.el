@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.6
+;; Version: 1.1.7
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -213,6 +213,8 @@ You can toggle or change error range interactively with
   nil
   '(online-judge--test-outline-mode online-judge--set-keys)
   nil)
+
+(put 'online-judge-test-mode 'mode-class 'special)
 
 
 
