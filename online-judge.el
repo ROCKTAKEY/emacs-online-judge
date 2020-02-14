@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.11
+;; Version: 1.1.12
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ If not, it have nil.")
               :contest-exact
               ,(concat
                 "\\(\\([Aa][GgBbRr][Cc]\\|[Cc]hokudai\\|CHOKUDAI\\)[0-9]+\\)\\|"
-                "\past[0-9]+\\(-open\\)?\\)")
+                "\\(past[0-9]+\\(-open\\)?\\)")
               :problem "[A-Za-z]"
               :url (online-judge--atcoder-url)))
     ))
