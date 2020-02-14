@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.7
+;; Version: 1.1.8
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -71,19 +71,11 @@ If not, it have nil.")
               :home "https://atcoder.jp"
               :contest "[-_a-zA-Z0-9]+"
               :contest-exact
-              "\\([Aa][GgBbRr][Cc]\\|[Cc]hokudai\\|CHOKUDAI\\)[0-9]+"
+              (concat
+               "\\(\\([Aa][GgBbRr][Cc]\\|[Cc]hokudai\\|CHOKUDAI\\)[0-9]+\\)\\|"
+               "\past[0-9]+\\(-open\\)?\\)")
               :problem "[A-Za-z]"
-              :url (format
-                    "https://atcoder.jp/contests/%s/tasks/%s_%s"
-                    (downcase (online-judge--get-contest))
-                    (downcase (online-judge--get-contest))
-                    (cond
-                     ((string-match "[Aa][Rr][Cc].*" (online-judge--get-contest))
-                      (format
-                       "%s"
-                       (1+ (- (elt (downcase (online-judge--get-problem)) 0)
-                              ?a))))
-                     (t (downcase (online-judge--get-problem)))))))
+              :url online-judge--atcoder-url))
     ))
 
 (defvar online-judge--login-alist
@@ -549,6 +541,31 @@ You can toggle or change error range interactively with
   ""
   (interactive "sURL: ")
   (setq online-judge--this-url url))
+
+
+
+(defun online-judge--atcoder-url ()
+  "Get URL on AtCoder."
+  (cond
+   ((string-match "\\(past[0-9]+\\)\\(-open\\)?" (online-judge--get-contest))
+    (format
+     "https://atcoder.jp/contests/%s/tasks/%s_%s"
+     (concat (match-string 1 (online-judge--get-contest)) "-open")
+     (match-string 1 (online-judge--get-contest))
+     (online-judge--get-problem)))
+   (t
+    (format
+     "https://atcoder.jp/contests/%s/tasks/%s_%s"
+     (downcase (online-judge--get-contest))
+     (downcase (online-judge--get-contest))
+     (cond
+      ((string-match "[Aa][Rr][Cc].*" (online-judge--get-contest))
+       (format
+        "%s"
+        (1+ (- (elt (downcase (online-judge--get-problem)) 0)
+               ?a))))
+      (t (downcase (online-judge--get-problem)))))))
+  )
 
 
 
