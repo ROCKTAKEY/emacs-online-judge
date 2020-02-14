@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.10
+;; Version: 1.1.11
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -66,14 +66,14 @@ If not, it have nil.")
 (defvar online-judge--buffer-name "*online-judge*")
 
 (defvar online-judge--host-alist
-  '((atcoder .
+  `((atcoder .
              (:host "[Aa]t[Cc]oder"
               :home "https://atcoder.jp"
               :contest "[-_a-zA-Z0-9]+"
               :contest-exact
-              (concat
-               "\\(\\([Aa][GgBbRr][Cc]\\|[Cc]hokudai\\|CHOKUDAI\\)[0-9]+\\)\\|"
-               "\past[0-9]+\\(-open\\)?\\)")
+              ,(concat
+                "\\(\\([Aa][GgBbRr][Cc]\\|[Cc]hokudai\\|CHOKUDAI\\)[0-9]+\\)\\|"
+                "\past[0-9]+\\(-open\\)?\\)")
               :problem "[A-Za-z]"
               :url (online-judge--atcoder-url)))
     ))
