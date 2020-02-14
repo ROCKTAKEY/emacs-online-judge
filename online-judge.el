@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.9
+;; Version: 1.1.10
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -559,7 +559,12 @@ You can toggle or change error range interactively with
      (downcase (online-judge--get-contest))
      (downcase (online-judge--get-contest))
      (cond
-      ((string-match "[Aa][Rr][Cc].*" (online-judge--get-contest))
+      ((or (string-match "[Aa][Rr][Cc][0-9]+" (online-judge--get-contest))
+           (progn
+             (string-match "[Aa][Bb][Cc]\\([0-9]+\\)"
+                           (online-judge--get-contest))
+             (> 20 (string-to-number
+                    (match-string 1 (online-judge--get-contest))))))
        (format
         "%s"
         (1+ (- (elt (downcase (online-judge--get-problem)) 0)
