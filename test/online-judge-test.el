@@ -26,6 +26,8 @@
 
 ;;; Code:
 
+(require 'online-judge)
+
 (ert-deftest atcoder-abc020-or-more ()
   (let ((online-judge--set t)
         (online-judge--host 'atcoder)
