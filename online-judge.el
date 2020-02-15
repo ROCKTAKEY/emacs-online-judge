@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.14
+;; Version: 1.2.0
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -190,9 +190,9 @@ You can toggle or change error range interactively with
 
 (defun online-judge--set-keys ()
   ""
-  (mapcar (lambda (arg)
-            (define-key online-judge-test-mode-map (kbd (car arg)) (cdr arg)))
-          online-judge-oj-test-mode-key-alist)
+  (mapc (lambda (arg)
+          (define-key online-judge-test-mode-map (kbd (car arg)) (cdr arg)))
+        online-judge-oj-test-mode-key-alist)
   (use-local-map online-judge-test-mode-map))
 
 (define-generic-mode online-judge-test-mode
@@ -213,11 +213,11 @@ You can toggle or change error range interactively with
 (defun online-judge--sample-format ()
   ""
   (or online-judge--sample-format
-   (setq online-judge--sample-format
-        (if online-judge-1-directory-p
-            (format "%s-%s" (file-name-base (buffer-file-name))
-                    online-judge--base-sample-format)
-          online-judge--base-sample-format))))
+      (setq online-judge--sample-format
+            (if online-judge-1-directory-p
+                (format "%s-%s" (file-name-base (buffer-file-name))
+                        online-judge--base-sample-format)
+              online-judge--base-sample-format))))
 
 (defun online-judge--command-name ()
   ""
@@ -253,8 +253,8 @@ You can toggle or change error range interactively with
 (defun online-judge--make-oj-command (&rest args)
   ""
   (mapconcat #'shell-quote-argument
-            (cons online-judge-executable args)
-            " "))
+             (cons online-judge-executable args)
+             " "))
 
 (defun online-judge--oj-sequential-command (&rest args)
   ""
@@ -306,78 +306,77 @@ You can toggle or change error range interactively with
 (defun online-judge--set-all ()
   ""
   (unless online-judge--set
-   (let* ((path (expand-file-name (file-name-sans-extension (buffer-file-name))))
-         (all-dirs (split-string path "/"))
-         index
-         (host-cons
-          (or
-           (-find (lambda (arg)
-                    (setq
-                     index
-                     (-find-last-index
-                      (lambda (dir)
-                        (string-match (plist-get (cdr arg) :host) dir))
-                      all-dirs)))
-                  online-judge--host-alist)
-           ;; when host is not found
-           (if online-judge-ask-when-unconfirmed
-               (setq host-cons (online-judge--completing-host-cons))
-             (message "Could not find host. Use %S." online-judge-default-host)
-             (setq host-cons
-                   (assq online-judge-default-host online-judge--host-alist)))))
-         (plist (cdr host-cons))
-         (contest-exact-regexp (plist-get plist :contest-exact))
-         (contest-regexp       (plist-get plist :contest))
-         (problem-regexp       (plist-get plist :problem))
-         (dirs (nthcdr (or index 0) all-dirs))
-         contest-index contest problem-index problem)
-    ;; Find exact contest name.
-    (setq
-     contest-index
-     (-find-last-index (lambda (dir)
-                         (string-match contest-exact-regexp dir))
-                       dirs))
-    (when contest-index
-      (let ((matched-string (nth contest-index dirs)))
-       (string-match contest-exact-regexp matched-string)
-      (setq contest (match-string 0 matched-string))
-      (setf (nth contest-index dirs)
-            (replace-match "/" nil nil matched-string))))
+    (let* ((path (expand-file-name (file-name-sans-extension (buffer-file-name))))
+           (all-dirs (split-string path "/"))
+           index
+           (host-cons
+            (or
+             (-find (lambda (arg)
+                      (setq
+                       index
+                       (-find-last-index
+                        (lambda (dir)
+                          (string-match (plist-get (cdr arg) :host) dir))
+                        all-dirs)))
+                    online-judge--host-alist)
+             ;; when host is not found
+             (if online-judge-ask-when-unconfirmed
+                 (online-judge--completing-host-cons)
+               (message "Could not find host. Use %S." online-judge-default-host)
+               (assq online-judge-default-host online-judge--host-alist))))
+           (plist (cdr host-cons))
+           (contest-exact-regexp (plist-get plist :contest-exact))
+           (contest-regexp       (plist-get plist :contest))
+           (problem-regexp       (plist-get plist :problem))
+           (dirs (nthcdr (or index 0) all-dirs))
+           contest-index contest problem-index problem)
+      ;; Find exact contest name.
+      (setq
+       contest-index
+       (-find-last-index (lambda (dir)
+                           (string-match contest-exact-regexp dir))
+                         dirs))
+      (when contest-index
+        (let ((matched-string (nth contest-index dirs)))
+          (string-match contest-exact-regexp matched-string)
+          (setq contest (match-string 0 matched-string))
+          (setf (nth contest-index dirs)
+                (replace-match "/" nil nil matched-string))))
 
-    ;; Find string that may be contest name.
-    ;; Ask contest name to user whether it's found or not.
-    (unless contest
-      (setq contest-index
+      ;; Find string that may be contest name.
+      ;; Ask contest name to user whether it's found or not.
+      (unless contest
+        (setq contest-index
+              (-find-last-index (lambda (dir)
+                                  (string-match contest-regexp dir))
+                                dirs))
+        (let ((matched-string (and contest-index (nth contest-index dirs)))
+              maybe-contest)
+          (when matched-string
+            (string-match contest-regexp matched-string)
+            (setq maybe-contest (match-string 0 matched-string)))
+          (setq contest
+                (read-from-minibuffer "contest name: " maybe-contest))
+          (when (equal contest maybe-contest)
+            (setf (nth contest-index dirs)
+                  (replace-match "/" nil nil matched-string)))))
+
+      ;; Find problem
+      (setq problem-index
             (-find-last-index (lambda (dir)
-                         (string-match contest-regexp dir))
+                                (string-match problem-regexp dir))
                               dirs))
-      (let ((matched-string (and contest-index (nth contest-index dirs)))
-            maybe-contest)
-       (when matched-string
-         (string-match contest-regexp matched-string)
-         (setq maybe-contest (match-string 0 matched-string)))
-      (setq contest
-            (read-from-minibuffer "contest name: " maybe-contest))
-      (when (equal contest maybe-contest)
-        (setf (nth contest-index dirs)
-              (replace-match "/" nil nil matched-string)))))
+      (setq problem
+            (or
+             (and problem-index
+                  (string-match problem-regexp (nth problem-index dirs))
+                  (match-string 0 (nth problem-index dirs)))
+             (read-from-minibuffer "Problem ID: ")))
 
-    ;; Find problem
-    (setq problem-index
-     (-find-last-index (lambda (dir)
-                         (string-match problem-regexp dir))
-                       dirs))
-    (setq problem
-          (or
-           (and problem-index
-                (string-match problem-regexp (nth problem-index dirs))
-                (match-string 0 (nth problem-index dirs)))
-           (read-from-minibuffer "Problem ID: ")))
-
-    (setq online-judge--host (car host-cons))
-    (setq online-judge--contest contest)
-    (setq online-judge--problem problem)
-    (setq online-judge--set t))))
+      (setq online-judge--host (car host-cons))
+      (setq online-judge--contest contest)
+      (setq online-judge--problem problem)
+      (setq online-judge--set t))))
 
 (defun online-judge--get-url ()
   ""
@@ -400,7 +399,7 @@ You can toggle or change error range interactively with
   ""
   (or online-judge--problem
       (let (problem)
-       (setq online-judge--problem problem))))
+        (setq online-judge--problem problem))))
 
 (defun online-judge--mode-line ()
   ""
@@ -412,11 +411,11 @@ You can toggle or change error range interactively with
                 online-judge-separator-1)
              "")
            (if (or (eq online-judge-display-mode-line t)
-                   (eq online-judge-display-mode-line contest))
-            (concat
-            online-judge--contest
-            online-judge-separator-2)
-            "")
+                   (eq online-judge-display-mode-line 'contest))
+               (concat
+                online-judge--contest
+                online-judge-separator-2)
+             "")
            (when online-judge-display-mode-line
              online-judge--problem))
    'bold t))
@@ -449,7 +448,7 @@ You can toggle or change error range interactively with
             #'online-judge--run-oj
             (online-judge--command-download-test)))
      (if next
-         `(lambda (process string)
+         `(lambda (_process string)
             (with-current-buffer ,(current-buffer)
               (if (or (string= string "finished\n")
                       online-judge--test-downloaded)
@@ -458,16 +457,16 @@ You can toggle or change error range interactively with
                     ,next)
                 (message "Download failed."))
               (setq online-judge--test-downloading nil)))
-       (lambda (process string)
-         (with-current-buffer ,(current-buffer)
-           (when (string= string "finished\n")
-             (setq online-judge--test-downloaded t))
-           (message "Download %s."
-                    (cond
-                     ((string= string "finished\n") "succeeded")
+       `(lambda (_process string)
+          (with-current-buffer ,(current-buffer)
+            (when (string= string "finished\n")
+              (setq online-judge--test-downloaded t))
+            (message "Download %s."
+                     (cond
+                      ((string= string "finished\n") "succeeded")
                       (online-judge--test-downloaded "have already finished")
                       (t "failed")))
-           (setq online-judge--test-downloading nil)))))))
+            (setq online-judge--test-downloading nil)))))))
 
 (defun online-judge-run-test (&optional next)
   "Run test."
@@ -495,8 +494,8 @@ You can toggle or change error range interactively with
       (set-process-sentinel
        process (lambda (_process string)
                  (message "Submission %s."
-                  (if (string= "finished\n" string)
-                      "succeeded" "failed")))))))
+                          (if (string= "finished\n" string)
+                              "succeeded" "failed")))))))
 
 (defun online-judge-test&submit ()
   ""
@@ -508,7 +507,7 @@ You can toggle or change error range interactively with
   (interactive)
   (if (= 0 online-judge--error-range)
       (setq online-judge--error-range (or online-judge--error-range-before
-                        online-judge-error-range-default))
+                              online-judge-error-range-default))
     (setq online-judge--error-range-before online-judge--error-range)
     (setq online-judge--error-range 0))
   (message "Error range is set to %f." online-judge--error-range))
@@ -562,15 +561,15 @@ You can toggle or change error range interactively with
      (downcase (online-judge--get-contest))
      (cond
       ((or (and
-             (string-match "[Aa][Rr][Cc]\\([0-9]+\\)"
-                           (online-judge--get-contest))
-             (> 35 (string-to-number
-                    (match-string 1 (online-judge--get-contest)))))
+            (string-match "[Aa][Rr][Cc]\\([0-9]+\\)"
+                          (online-judge--get-contest))
+            (> 35 (string-to-number
+                   (match-string 1 (online-judge--get-contest)))))
            (and
-             (string-match "[Aa][Bb][Cc]\\([0-9]+\\)"
-                           (online-judge--get-contest))
-             (> 20 (string-to-number
-                    (match-string 1 (online-judge--get-contest))))))
+            (string-match "[Aa][Bb][Cc]\\([0-9]+\\)"
+                          (online-judge--get-contest))
+            (> 20 (string-to-number
+                   (match-string 1 (online-judge--get-contest))))))
        (format
         "%s"
         (1+ (- (elt (downcase (online-judge--get-problem)) 0)
