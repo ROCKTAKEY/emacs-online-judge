@@ -5,7 +5,7 @@
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.1.13
+;; Version: 1.1.14
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -553,6 +553,8 @@ You can toggle or change error range interactively with
      (concat (match-string 1 (online-judge--get-contest)) "-open")
      (match-string 1 (online-judge--get-contest))
      (online-judge--get-problem)))
+   ((string-match "\\([Cc]hokudai\\|CHOKUDAI\\)001" (online-judge--get-contest))
+    "https://atcoder.jp/contests/chokudai001/tasks/chokudai_001_a")
    (t
     (format
      "https://atcoder.jp/contests/%s/tasks/%s_%s"
