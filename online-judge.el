@@ -1,11 +1,11 @@
 ;;; online-judge.el --- Interface for online-judge-tool.  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019  ROCKTAKEY
+;; Copyright (C) 2019-2020  ROCKTAKEY
 
 ;; Author: ROCKTAKEY <rocktakey@gmail.com>
 ;; Keywords: tools
 
-;; Version: 1.2.0
+;; Version: 1.2.1
 ;; Package-Requires: ((f "0.20.0") (dash "2.14"))
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -404,7 +404,7 @@ You can toggle or change error range interactively with
 (defun online-judge--mode-line ()
   ""
   (propertize
-   (format "%s%s%s"
+   (format " %s%s%s"
            (if (eq online-judge-display-mode-line t)
                (concat
                 (symbol-name online-judge--host)
